@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Upload Chunk!";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form id="uploadForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <input type="file" name="fileInput" id="fileInput" multiple>
+    <button type="submit">Upload</button>
+</form>
