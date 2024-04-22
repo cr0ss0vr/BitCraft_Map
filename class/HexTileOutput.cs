@@ -73,7 +73,7 @@ namespace BitcraftWebMap.@class
             {
                 Directory.CreateDirectory(MapsDir);
             }
-            var MapFiles = Directory.GetFiles(MapsDir, "prod_terrain_chunk_*");
+            var MapFiles = Directory.GetFiles(MapsDir, "prod_terrain_chunk_1_*");
             int MaxHeightSeen = 0;
 
             foreach (var file in MapFiles)
