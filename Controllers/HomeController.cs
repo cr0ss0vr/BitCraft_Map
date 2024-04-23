@@ -19,15 +19,20 @@ namespace BitcraftWebMap.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(bool? alternateColours)
         {
+            // Retrieve the alternate colours setting from the form
+            var alternateColoursValue = alternateColours ?? false;
+            // Store the alternate colours setting in ViewBag to pass it back to the view
+            ViewBag.AlternateColours = alternateColoursValue;
+
             return View();
         }
 
-        public IActionResult RenderImage()
+        public IActionResult RenderImage(bool? alternateColours)
         {
             hexTileOutput = new HexTileOutput();
-            hexTileOutput.CreateImage();
+            hexTileOutput.CreateImage(alternateColours);
             using (var stream = new MemoryStream())
             {
                 // Convert the Image<Rgba32> object to a byte array
@@ -66,6 +71,12 @@ namespace BitcraftWebMap.Controllers
                         // Invalid file name format
                         ViewBag.UploadErrorMessage = $"Invalid file name format: {fileName}";
                         throw new Exception("Invalid file name format.");
+                    }
+                    else
+                    {
+                        //do not write chunks that are from a different 'dimension'
+                        if (!fileName.StartsWith("prod_terrain_chunk_1_"))
+                            continue;
                     }
 
                     var filePath = "./chunks/" + fileName;

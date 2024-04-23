@@ -25,6 +25,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Upload">Upload</a>
                         </li>
+                        <li class="ml-auto">
+                            <!-- Added ml-auto class to align this <li> to the right -->
+                            <a class="nav-link text-black" href="#">
+                                <label>
+                                    <input type="checkbox" id="toggleColoursCheckbox" @(ViewBag.AlternateColours != null && ViewBag.AlternateColours ? "checked" : "")>
+                                    Use Alternative Colours
+                                </label>
+                            </a>
+                            <form id="toggleForm" method="post" action="@Url.Action("Index", "Home")">
+                                <input type="hidden" name="alternateColours" id="alternateColours" value="@((bool)(ViewBag.AlternateColours ?? false))" />
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>

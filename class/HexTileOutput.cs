@@ -35,28 +35,50 @@ namespace BitcraftWebMap.@class
             Desert,//7
             Swamp,//8
             Canyon,//9
-            Ocean//9
+            Ocean//10
         }
 
         public string MapsDir = Path.GetFullPath("./chunks/");
 
         public Dictionary<uint, Color> BiomeMap = new Dictionary<uint, Color>() {
-        { 1, new Color(new Rgba32(180, 203, 147))  },
-        { 2, new Color(new Rgba32(124, 133, 114))  },
-        { 3, Color.White },
-        { 4, new Color(new Rgba32(218, 236, 189)) },
-        { 5, new Color(new Rgba32(188, 151, 96)) },
-        { 6, new Color(new Rgba32(255, 183, 255)) },
-        { 7, new Color(new Rgba32(255,255,255)) },
-        { 8, Color.DarkSeaGreen },
-        { 9, Color.SlateGrey },
-        { 10, new Color(new Rgba32(2,164,245)) },
+            { 1, new Color(new Rgba32(180, 203, 147))  },
+            { 2, new Color(new Rgba32(124, 133, 114))  },
+            { 3, Color.White },
+            { 4, new Color(new Rgba32(218, 236, 189)) },
+            { 5, new Color(new Rgba32(188, 151, 96)) },
+            { 6, new Color(new Rgba32(255, 183, 255)) },
+            { 7, new Color(new Rgba32(255,255,255)) },
+            { 8, Color.DarkSeaGreen },
+            { 9, Color.SlateGrey },
+            { 10, new Color(new Rgba32(2,164,245)) },
+        };
 
+        public static Dictionary<uint, Color> AltBiomeMap = new Dictionary<uint, Color>() {
+             { 1, new Color(new Rgba32(4, 198, 6))  },
+             { 2, new Color(new Rgba32(2, 107, 31))  },
+             { 3, new Color(new Rgba32(225,225,225)) },
+             { 4, new Color(new Rgba32(230, 177, 157)) },
+             { 5, new Color(new Rgba32(203, 88, 17)) },
+             { 6, new Color(new Rgba32(168, 216, 244)) },
+             { 7, new Color(new Rgba32(255, 240, 101)) },
+             { 8, new Color(new Rgba32(96, 48, 17)) },
+             { 9, new Color(new Rgba32(82, 91, 82)) },
+             { 10, new Color(new Rgba32(5, 67, 150)) },
+         };
 
-    };
-        public Color GetColorForBiome(uint biomeId)
+        public Color GetColorForBiome(uint biomeId, bool? AlternativeColours = false)
         {
             var remap = BitConverter.GetBytes(biomeId)[0];
+
+            if (AlternativeColours.HasValue && AlternativeColours.Value == true)
+            {
+                if (!AltBiomeMap.ContainsKey(remap))
+                {
+                    var Random = new Random();
+                    AltBiomeMap[remap] = new Color(new Rgba32((float)Random.NextDouble(), (float)Random.NextDouble(), (float)Random.NextDouble(), 1f));
+                }
+                return AltBiomeMap[(uint)remap];
+            }
 
             if (!BiomeMap.ContainsKey(remap))
             {
@@ -66,7 +88,7 @@ namespace BitcraftWebMap.@class
             return BiomeMap[remap];
         }
 
-        public void CreateImage()
+        public void CreateImage(bool? AlternativeColours = false)
         {
             var MapChunks = new List<HexTileCacheData>();
             if (!Directory.Exists(MapsDir))
@@ -102,7 +124,7 @@ namespace BitcraftWebMap.@class
                     {
                         var image_x = file.ChunkX * 32 + x;
                         var image_y = file.ChunkY * 32 + y;
-                        var Col = GetColorForBiome(file.Biomes[index]);
+                        var Col = GetColorForBiome(file.Biomes[index], AlternativeColours);
 
                         if (file.WaterLevels[index]
                             < file.Elevations[index])

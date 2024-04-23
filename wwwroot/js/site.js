@@ -93,4 +93,16 @@ $(document).ready(function () {
         // Call the uploadFiles method with the selected files
         validateForm(files);
     });
+
+    // Attach event listener to the checkbox's change event
+    $('#toggleColoursCheckbox').change(function () {
+        // Get the value of the checkbox
+        var isChecked = $(this).is(":checked");
+
+        // Update the hidden input value with the checkbox state
+        $('#alternateColours').val(isChecked);
+
+        // Submit the form
+        $('#toggleForm').submit();
+    });
 });

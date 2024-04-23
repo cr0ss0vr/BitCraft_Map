@@ -3,5 +3,5 @@
 }
 
 <a class="nav-link text-dark" href="\home\renderimage" alt="click to fullscreen" style="max-width:1024px;max-height:1024px;">
-    <img src="@Url.Action("RenderImage", "Home")" alt="Map Image" width="1024" height="1024">
+    <img src="@Url.Action("RenderImage", "Home", new { alternateColours = ViewBag.AlternateColours })" alt="Map Image" width="1024" height="1024">
 </a>
