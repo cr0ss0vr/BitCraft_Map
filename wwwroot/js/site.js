@@ -81,6 +81,22 @@ $(document).ready(function () {
                 }
             });
         }
+
+        $.ajax({
+            url: '/Home/UpdateRender',
+            type: 'POST',
+            data: '',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                // Update success message on the page
+                $("batch-1").text($("#batch-1").text()+" \r\n Map Updated!");
+            },
+            error: function (xhr, status, error) {
+                // Update error message on the page
+                $("batch-1").text($("#batch-1").text() + " \r\n Map failed to update");
+            }
+        });
     }
 
     // Attach event listener to the form's submit event

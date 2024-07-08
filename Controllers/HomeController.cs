@@ -12,7 +12,7 @@ namespace BitcraftWebMap.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private HexTileOutput hexTileOutput;
+        private HexTileOutput hexTileOutput = new HexTileOutput();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -31,7 +31,6 @@ namespace BitcraftWebMap.Controllers
 
         public IActionResult RenderImage(bool? alternateColours)
         {
-            hexTileOutput = new HexTileOutput();
             hexTileOutput.CreateImage(alternateColours);
             using (var stream = new MemoryStream())
             {
@@ -65,7 +64,7 @@ namespace BitcraftWebMap.Controllers
                         throw new Exception("Invalid file size.");
                     }
 
-                    var regex = new Regex("^prod_terrain_chunk_[0-9]{1,4}_[0-9]{1,4}_[0-9]{1,4}$");
+                    var regex = new Regex("^alpha2_terrain_chunk_[0-9]{1,4}_[0-9]{1,4}_[0-9]{1,4}$");
                     if (!regex.IsMatch(fileName))
                     {
                         // Invalid file name format
@@ -75,7 +74,7 @@ namespace BitcraftWebMap.Controllers
                     else
                     {
                         //do not write chunks that are from a different 'dimension'
-                        if (!fileName.StartsWith("prod_terrain_chunk_1_"))
+                        if (!fileName.StartsWith("alpha2_terrain_chunk_1_"))
                             continue;
                     }
 
@@ -90,6 +89,7 @@ namespace BitcraftWebMap.Controllers
                 }
 
                 ViewBag.UploadSuccessMessage = $"Files uploaded successfully.";
+
                 return Ok("Batch uploaded successfully!");
             }
             catch (Exception ex)
@@ -100,6 +100,14 @@ namespace BitcraftWebMap.Controllers
 
         }
 
+        [HttpPost]
+        [Route("/Home/UpdateRender")]
+        public async Task<IActionResult> UpdateRender()
+        {
+            hexTileOutput.CreateAndSave();
+            hexTileOutput.CreateAndSave(true);
+            return Ok("Map updated!");
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/chunks.old
+/tempchunks
+/img/output.png
+/wwwroot/img/output.png
+/img/output_alt.png
+/wwwroot/img/output_alt.png

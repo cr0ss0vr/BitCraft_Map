@@ -90,12 +90,13 @@ namespace BitcraftWebMap.@class
 
         public void CreateImage(bool? AlternativeColours = false)
         {
+            image = new Image<Rgba32>(width, 4097);
             var MapChunks = new List<HexTileCacheData>();
             if (!Directory.Exists(MapsDir))
             {
                 Directory.CreateDirectory(MapsDir);
             }
-            var MapFiles = Directory.GetFiles(MapsDir, "prod_terrain_chunk_1_*");
+            var MapFiles = Directory.GetFiles(MapsDir, "alpha2_terrain_chunk_1_*");
             int MaxHeightSeen = 0;
 
             foreach (var file in MapFiles)
@@ -155,18 +156,25 @@ namespace BitcraftWebMap.@class
 
         }
 
-        public void SaveImage()
+        public void SaveImage(bool useAltColours = false)
         {
-
             // Save the image as a JPEG file
-            string filePath = "output.png";
-            image.Save(filePath, new PngEncoder { });
-            Console.WriteLine($"Image saved as: {filePath}");
+            string dir = (Directory.Exists("./wwwroot") ? "./wwwroot/" : "./") + "img/"; 
+            string filePath = "output" + (useAltColours ? "_alt" : "") + ".png";
 
-            foreach (var Biome in BiomeMap)
+            if (!Directory.Exists(dir))
             {
-                Console.WriteLine(Biome.Key);
+                Directory.CreateDirectory(dir);
             }
+            image.Save(dir+filePath, new PngEncoder { });
+            Console.WriteLine($"Image saved as: {dir+filePath}");
+
+        }
+
+        public void CreateAndSave(bool useAltColours = false)
+        {
+            CreateImage(useAltColours);
+            SaveImage(useAltColours);
         }
     }
 }
